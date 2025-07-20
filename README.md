@@ -104,9 +104,22 @@ Lance l’exécutable `CyberToolbox` et sélectionne l’option correspondante :
 
 ### Analyse de logs SSH
 
-- **Objectif** : Détecter et compter les tentatives de connexion échouées.
-- **Fichiers** : `src/log_analyzer.c`, `include/log_analyzer.h`
-- **Extensions possibles** : ban automatique via iptables, interface web
+Objectif : Détecter et compter les tentatives de connexion échouées à partir d’un fichier `.log` syslog.
+
+Fichiers : `src/log_analyzer.c`, `include/log_analyzer.h`
+
+Fonctionnement :
+
+1. Lit un fichier de log brut (ex. `tests/auth_sample.log`).
+2. Repère les lignes contenant « Failed password ».
+3. Extrait les adresses IP et met à jour un compteur par IP.
+4. Génère un dossier de sortie dédié (`output/logs_analysis/`) où l’on trouve :
+   - `stats_summary.txt` : résumé texte des statistiques générales (nombre total de lignes analysées, nombre d’échecs).
+   - `intrusion_report.txt` : rapport détaillé sur les tentatives d’intrusion détectées (plages horaires, IPs les plus actives).
+   - `ip_list.csv` : liste formatée des IPs et de leur nombre d’échecs, facilement importable en tableur.
+
+Extensions possibles : ban automatique via iptables, interface web, filtre par période, export JSON ou HTML.
+
 
 ## Tests
 
